@@ -5,4 +5,4 @@ Screenshots
 
 ![plasma aqua white](screenshots/plasma_aqua_1.png?raw=true "plasma aqua white")
 
-![plasma aqua dark](screenshots/plasma_aqua_2.png?raw=true "plasma aqua dark")
+![plasma aqua dark](screenshots/plasma_Aqua-Dark1.png?raw=true "plasma aqua dark")
