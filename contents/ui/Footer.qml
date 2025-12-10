@@ -12,7 +12,6 @@ import org.kde.ksvg as KSvg
 import org.kde.plasma.components as PC3
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.plasmoid
 
 PlasmaExtras.PlasmoidHeading {
     id: root
@@ -20,7 +19,6 @@ PlasmaExtras.PlasmoidHeading {
     readonly property alias tabBar: tabBar
     property real preferredTabBarWidth: 0
     readonly property alias leaveButtons: leaveButtons
-    property bool places: Plasmoid.configuration.placesFirst
 
     contentWidth: tabBar.implicitWidth + spacing
     contentHeight: leaveButtons.implicitHeight
@@ -38,7 +36,6 @@ PlasmaExtras.PlasmoidHeading {
 
     spacing: kickoff.backgroundMetrics.spacing
     position: PC3.ToolBar.Footer
-    enabledBorders: Qt.BootomEdge
 
     PC3.TabBar {
         id: tabBar
@@ -100,8 +97,8 @@ PlasmaExtras.PlasmoidHeading {
             anchors.bottomMargin: -root.bottomPadding
             icon.width: Kirigami.Units.iconSizes.smallMedium
             icon.height: Kirigami.Units.iconSizes.smallMedium
-            icon.name: root.places === true ? "compass" : "applications-all-symbolic"
-            text: root.places === true ? i18n("Places") : i18n("Applications")
+            icon.name: "applications-all-symbolic"
+            text: i18n("Applications")
             Keys.onBacktabPressed: event => {
                 (kickoff.lastCentralPane || nextItemInFocusChain(false))
                     .forceActiveFocus(Qt.BacktabFocusReason)
@@ -116,8 +113,8 @@ PlasmaExtras.PlasmoidHeading {
             anchors.bottomMargin: -root.bottomPadding
             icon.width: Kirigami.Units.iconSizes.smallMedium
             icon.height: Kirigami.Units.iconSizes.smallMedium
-            icon.name: root.places === true ? "applications-all-symbolic" : "compass"
-            text: root.places === true ? i18n("Applications") : i18n("Places")
+            icon.name: "compass"
+            text: i18n("Places") //Explore?
         }
 
         Connections {
@@ -161,7 +158,7 @@ PlasmaExtras.PlasmoidHeading {
         }
 
         // available width for leaveButtons
-        maximumWidth: 200
+        maximumWidth: root.availableWidth - tabBar.width - root.spacing
 
         Keys.onUpPressed: event => {
             kickoff.lastCentralPane.forceActiveFocus(Qt.BacktabFocusReason);

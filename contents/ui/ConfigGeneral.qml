@@ -38,7 +38,6 @@ KCM.SimpleKCM {
     property int cfg_primaryActions: Plasmoid.configuration.primaryActions
     property alias cfg_showActionButtonCaptions: showActionButtonCaptions.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
-    property alias cfg_placesFirst: placesFirstCheckbox.checked
     property alias cfg_highlightNewlyInstalledApps: highlightNewlyInstalledAppsCheckbox.checked
     property alias cfg_switchCategoryOnHover: switchCategoryOnHoverCheckbox.checked
 
@@ -188,12 +187,6 @@ KCM.SimpleKCM {
             checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.compactMode
             enabled: !Kirigami.Settings.tabletMode
         }
-        QQC2.CheckBox {
-            id: placesFirstCheckbox
-            text: i18n("Use Places First")
-            checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.placesFirst
-            enabled: !Kirigami.Settings.tabletMode
-        }
         QQC2.Label {
             visible: Kirigami.Settings.tabletMode
             text: i18nc("@info:usagetip under a checkbox when Touch Mode is on", "Automatically disabled when in Touch Mode")
@@ -279,20 +272,20 @@ KCM.SimpleKCM {
         }
 
         QQC2.RadioButton {
-            id: sessionActionsButton
-            text: i18n("Session")
-            QQC2.ButtonGroup.group: radioGroup
-            property string actions: "lock-screen,logout,save-session,switch-user"
-            property int index: 0
-            checked: Plasmoid.configuration.primaryActions === index
-        }
-
-        QQC2.RadioButton {
             id: powerActionsButton
             Kirigami.FormData.label: i18n("Show buttons for:")
             text: i18n("Power")
             QQC2.ButtonGroup.group: radioGroup
             property string actions: "suspend,hibernate,reboot,shutdown"
+            property int index: 0
+            checked: Plasmoid.configuration.primaryActions === index
+        }
+
+        QQC2.RadioButton {
+            id: sessionActionsButton
+            text: i18n("Session")
+            QQC2.ButtonGroup.group: radioGroup
+            property string actions: "lock-screen,logout,save-session,switch-user"
             property int index: 1
             checked: Plasmoid.configuration.primaryActions === index
         }

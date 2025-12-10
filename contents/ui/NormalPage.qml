@@ -7,88 +7,35 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Templates as T
-import org.kde.plasma.plasmoid
 
 EmptyPage {
     id: root
-    property real preferredSideBarWidth: Math.max(footer.tabBar.implicitWidth, 200)
-    property bool places: Plasmoid.configuration.placesFirst
+    property real preferredSideBarWidth: Math.max(footer.tabBar.implicitWidth, applicationsPage.implicitSideBarWidth)
 
     contentItem: HorizontalStackView {
-        Component {
-            id: lugar0
-            HorizontalStackView {
-                id: stackView
-                focus: true
-                reverseTransitions: footer.tabBar.currentIndex === 1
-                initialItem: PlacesPage {
-                    id: placesPage
-                    preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
-                }
-                Component {
-                    id: applicationsPage
-                    ApplicationsPage {
-                        preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
-                        preferredSideBarHeight: placesPage.implicitSideBarHeight
-                    }
-                }
-                Connections {
-                    target: footer.tabBar
-                    function onCurrentIndexChanged() {
-                        if (footer.tabBar.currentIndex === 0) {
-                            stackView.replace(placesPage)
-                        } else if (footer.tabBar.currentIndex === 1) {
-                            stackView.replace(applicationsPage)
-                        }
-                    }
-                }
-            }
-
+        id: stackView
+        focus: true
+        reverseTransitions: footer.tabBar.currentIndex === 1
+        initialItem: ApplicationsPage {
+            id: applicationsPage
+            preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
         }
-
         Component {
-            id: lugar1
-            HorizontalStackView {
-                id: stackView
-                focus: true
-                reverseTransitions: footer.tabBar.currentIndex === 1
-                initialItem: ApplicationsPage {
-                    id: applicationsPage
-                    preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
-                }
-                Component {
-                    id: placesPage
-                    PlacesPage {
-                        preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
-                        preferredSideBarHeight: applicationsPage.implicitSideBarHeight
-                    }
-                }
-                Connections {
-                    target: footer.tabBar
-                    function onCurrentIndexChanged() {
-                        if (footer.tabBar.currentIndex === 0) {
-                            stackView.replace(applicationsPage)
-                        } else if (footer.tabBar.currentIndex === 1) {
-                            stackView.replace(placesPage)
-                        }
-                    }
-                }
+            id: placesPage
+            PlacesPage {
+                preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
+                preferredSideBarHeight: applicationsPage.implicitSideBarHeight
             }
-
         }
-
-        contentItem: {
-            switch( root.places ) {
-                case true:   return lugar0.createObject(root);
-                case false: return lugar1.createObject(root);
+        Connections {
+            target: footer.tabBar
+            function onCurrentIndexChanged() {
+                if (footer.tabBar.currentIndex === 0) {
+                    stackView.replace(applicationsPage)
+                } else if (footer.tabBar.currentIndex === 1) {
+                    stackView.replace(placesPage)
+                }
             }
-
-      /*    if (root.places) {
-              lugar1.createObject(root);
-          }
-          else {
-              lugar0.createObject(root);
-          } */
         }
     }
 

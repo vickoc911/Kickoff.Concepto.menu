@@ -41,7 +41,7 @@ RowLayout {
         const collapseOverflowMenuButton = !collapseActionButtons && configuredImplicitWidth_TextBesideIcon > maximumWidth;
 
         // Can't rely on the transient Item::visible property
-        const overflowMenuButtonIsVisible = !allActionsArePrimary || collapseActionButtons;
+        const overflowMenuButtonIsVisible = collapseActionButtons || !allActionsArePrimary;
 
         return {
             allActionsArePrimary,
@@ -150,6 +150,8 @@ RowLayout {
                         nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
                     }
                 }
+                Keys.onEnterPressed: clicked()
+                Keys.onReturnPressed: clicked()
             }
         }
     }
@@ -166,7 +168,7 @@ RowLayout {
         icon.width: Kirigami.Units.iconSizes.smallMedium
         icon.height: Kirigami.Units.iconSizes.smallMedium
         icon.name: ["system-log-out", "system-shutdown", "view-more-symbolic", "view-more-symbolic"][Plasmoid.configuration.primaryActions]
-        text: [i18n("Session"), i18n("Power"), i18n("More"), i18n("Session and Power ")][Plasmoid.configuration.primaryActions]
+        text: [i18n("Session"), i18n("Power"), i18n("More"), i18n("Session and Power")][Plasmoid.configuration.primaryActions]
         // Make it look pressed while the menu is open
         down: contextMenu.status === PlasmaExtras.Menu.Open || pressed
         PC3.ToolTip.text: text

@@ -21,7 +21,6 @@ import org.kde.coreaddons as KCoreAddons
 import org.kde.kcmutils as KCM
 import org.kde.config as KConfig
 import org.kde.plasma.plasmoid
-import org.kde.ksvg as KSvg
 
 PlasmaExtras.PlasmoidHeading {
     id: root
@@ -32,20 +31,9 @@ PlasmaExtras.PlasmoidHeading {
     property Item avatar: avatar
     property real preferredNameAndIconWidth: 0
 
-    /*contentHeight: layoutContainer.height
+    contentHeight: layoutContainer.height
         + kickoff.backgroundMetrics.topPadding
-        + kickoff.backgroundMetrics.bottomPadding */
-    contentHeight: Math.max(searchField.implicitHeight, configureButton.implicitHeight) + 50
-    leftPadding: 0
-    rightPadding: 0
-    topPadding: 0
-    bottomPadding: 0
-
-    leftInset: -kickoff.backgroundMetrics.leftPadding
-    rightInset: -kickoff.backgroundMetrics.rightPadding
-    topInset: 0
-    bottomInset: 0
-    enabledBorders: Qt.TopEdge
+        + kickoff.backgroundMetrics.bottomPadding
 
     KCoreAddons.KUser {
         id: kuser
@@ -72,7 +60,6 @@ PlasmaExtras.PlasmoidHeading {
 
             height: Math.max(searchField.implicitHeight, configureButton.implicitHeight)
             anchors {
-                top: parent.top
                 verticalCenter: parent.verticalCenter
                 left: parent.left
                 leftMargin: kickoff.backgroundMetrics.leftPadding
@@ -91,24 +78,18 @@ PlasmaExtras.PlasmoidHeading {
                 KirigamiComponents.AvatarButton {
                     id: avatar
                     visible: KConfig.KAuthorized.authorizeControlModule("kcm_users")
-                //    height: root.height + 10
-                //    width: root.height + 10
 
                     Layout.fillHeight: true
-                    Layout.minimumWidth: height - 5
-                    Layout.maximumWidth: height - 5
+                    Layout.minimumWidth: height
+                    Layout.maximumWidth: height
 
-                    text: i18n("Wellcome ") + kuser.loginName
+                    text: i18n("Open user settings")
                     name: kuser.fullName
 
                     // The icon property emits two signals in a row during which it
                     // changes to an empty URL and probably back to the same
                     // static file path, so we need QtQuick.Image not to cache it.
                     cache: false
-                    anchors {
-                        horizontalCenter: parent.horizontalCenter
-                        margins: Kirigami.Units.smallSpacing
-                    }
                     source: kuser.faceIconUrl
 
                     Keys.onTabPressed: event => {
@@ -138,7 +119,7 @@ PlasmaExtras.PlasmoidHeading {
                     onClicked: KCM.KCMLauncher.openSystemSettings("kcm_users")
                 }
 
-        /*        MouseArea {
+                MouseArea {
                     id: nameAndInfoMouseArea
                     hoverEnabled: true
 
@@ -147,15 +128,10 @@ PlasmaExtras.PlasmoidHeading {
 
                     Kirigami.Heading {
                         id: nameLabel
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
+                        anchors.fill: parent
                         opacity: parent.containsMouse ? 0 : 1
                         color: Kirigami.Theme.textColor
                         level: 4
-                     //   text: ""
                         text: kuser.fullName
                         textFormat: Text.PlainText
                         elide: Text.ElideRight
@@ -172,11 +148,7 @@ PlasmaExtras.PlasmoidHeading {
 
                     Kirigami.Heading {
                         id: infoLabel
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
+                        anchors.fill: parent
                         level: 5
                         opacity: parent.containsMouse ? 1 : 0
                         color: Kirigami.Theme.textColor
@@ -197,7 +169,7 @@ PlasmaExtras.PlasmoidHeading {
                     PC3.ToolTip.text: infoLabel.text
                     PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
                     PC3.ToolTip.visible: infoLabel.truncated && containsMouse
-                } */
+                }
             }
             RowLayout {
                 id: rowLayout
