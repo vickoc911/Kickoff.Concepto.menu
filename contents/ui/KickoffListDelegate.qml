@@ -138,7 +138,7 @@ AbstractKickoffItemDelegate {
             height: KickoffSingleton.lineSvg.horLineHeight
 
             svg: KickoffSingleton.lineSvg
-            elementId: "horizontal-line"
+            elementId: "vertical-line"
         }
     }
 }

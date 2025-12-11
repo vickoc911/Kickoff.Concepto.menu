@@ -34,6 +34,43 @@ FocusScope {
     implicitWidth: preferredSideBarWidth + separator.implicitWidth + contentAreaLoader.implicitWidth
     implicitHeight: Math.max(preferredSideBarHeight, contentAreaLoader.implicitHeight)
 
+    //  cambio concepto
+    KSvg.FrameSvgItem {
+        id: fondoplaces
+        //  property real fondoplacearchos: implicitHeight + 50
+        anchors {
+            top: root.top
+            left: root.left
+            topMargin: - 86
+            bottom: root.bottom
+            bottomMargin: - 45
+        }
+        LayoutMirroring.enabled: kickoff.sideBarOnRight
+        width: preferredSideBarWidth - 4
+        opacity: 0.6
+        imagePath: "dialogs/background"
+        prefix: "center"
+    }
+
+    KSvg.FrameSvgItem {
+        id: shadowplaces
+        //  property real fondoplacearchos: implicitHeight + 50
+        anchors {
+            top: parent.top
+            left: parent.left
+            leftMargin: - 11
+            topMargin: - 98
+            bottom: parent.bottom
+            bottomMargin: - 57
+        }
+        //    enabledBorders: Qt.TopEdge | Qt.RightEdge | Qt.BottomEdge;
+        LayoutMirroring.enabled: kickoff.sideBarOnRight
+        width: preferredSideBarWidth + 18
+        imagePath: "dialogs/background"
+        prefix: "shadow"
+    }
+    // Fin Cambio concepto
+
     TriangleMouseFilter {
         id: sideBarFilter
         active: Plasmoid.configuration.switchCategoryOnHover
@@ -86,8 +123,12 @@ FocusScope {
             left: sideBarFilter.right
             bottom: parent.bottom
         }
+        // Cambio concepto
+        visible: false
+        width: 1
+        // Fin Cambio concepto
         LayoutMirroring.enabled: kickoff.sideBarOnRight
-        implicitWidth: naturalSize.width
+       // implicitWidth: naturalSize.width
         implicitHeight: implicitWidth
         elementId: "vertical-line"
         svg: KickoffSingleton.lineSvg

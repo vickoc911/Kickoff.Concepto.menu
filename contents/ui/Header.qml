@@ -21,6 +21,7 @@ import org.kde.coreaddons as KCoreAddons
 import org.kde.kcmutils as KCM
 import org.kde.config as KConfig
 import org.kde.plasma.plasmoid
+import org.kde.ksvg as KSvg
 
 PlasmaExtras.PlasmoidHeading {
     id: root
@@ -31,9 +32,20 @@ PlasmaExtras.PlasmoidHeading {
     property Item avatar: avatar
     property real preferredNameAndIconWidth: 0
 
-    contentHeight: layoutContainer.height
+   /* contentHeight: layoutContainer.height
         + kickoff.backgroundMetrics.topPadding
-        + kickoff.backgroundMetrics.bottomPadding
+        + kickoff.backgroundMetrics.bottomPadding */
+   contentHeight: Math.max(searchField.implicitHeight, configureButton.implicitHeight) + 50
+   leftPadding: 0
+   rightPadding: 0
+   topPadding: 0
+   bottomPadding: 0
+
+   leftInset: -kickoff.backgroundMetrics.leftPadding
+   rightInset: -kickoff.backgroundMetrics.rightPadding
+   topInset: 0
+   bottomInset: 0
+   enabledBorders: Qt.TopEdge
 
     KCoreAddons.KUser {
         id: kuser
@@ -60,6 +72,7 @@ PlasmaExtras.PlasmoidHeading {
 
             height: Math.max(searchField.implicitHeight, configureButton.implicitHeight)
             anchors {
+                top: parent.top
                 verticalCenter: parent.verticalCenter
                 left: parent.left
                 leftMargin: kickoff.backgroundMetrics.leftPadding
@@ -80,10 +93,10 @@ PlasmaExtras.PlasmoidHeading {
                     visible: KConfig.KAuthorized.authorizeControlModule("kcm_users")
 
                     Layout.fillHeight: true
-                    Layout.minimumWidth: height
-                    Layout.maximumWidth: height
+                    Layout.minimumWidth: height -5
+                    Layout.maximumWidth: height -5
 
-                    text: i18n("Open user settings")
+                    text: i18n("Wellcome ") + kuser.loginName
                     name: kuser.fullName
 
                     // The icon property emits two signals in a row during which it

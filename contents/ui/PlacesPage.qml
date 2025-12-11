@@ -10,6 +10,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Templates as T
 import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.private.kicker as Kicker
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 
 BasePage {
@@ -18,7 +20,9 @@ BasePage {
     sideBarComponent: KickoffListView {
         id: sideBar
         focus: true // needed for Loaders
-        model: placesCategoryModel
+      //  model: placesCategoryModel
+        model: kickoff.computerModel
+        section.property: model && model.description === "KICKER_ALL_MODEL" ? "group" : "_unset"
         delegate: KickoffListDelegate {
             url: ""
             description: ""
@@ -37,35 +41,130 @@ BasePage {
         }
     }
 
-    contentAreaComponent: KickoffListView {
-        id: contentArea
-        mainContentView: true
-        focus: true
-        objectName: "frequentlyUsedView"
-        model: switch (root.sideBarItem.currentIndex) {
-            case 0: return kickoff.computerModel
-            case 1: return kickoff.recentUsageModel
-            case 2: return kickoff.frequentUsageModel
-        }
-        onActiveFocusChanged: if (activeFocus && count < 1) {
-            root.sideBarItem.forceActiveFocus()
-        }
-    }
+    contentAreaComponent: VerticalStackView {
+        id: stackView
 
-    // we make our model ourselves
-    ListModel {
-        id: placesCategoryModel
-        ListElement { display: "Computer"; decoration: "computer" }
-        ListElement { display: "History"; decoration: "view-history" }
-        ListElement { display: "Frequently Used"; decoration: "clock" }
-        Component.onCompleted: {
-            // Can't use a function in a QML ListElement declaration
-            placesCategoryModel.setProperty(0, "display", i18nc("category in Places sidebar", "Computer"))
-            placesCategoryModel.setProperty(1, "display", i18nc("category in Places sidebar", "History"))
-            placesCategoryModel.setProperty(2, "display", i18nc("category in Places sidebar", "Frequently Used"))
-            if (KickoffSingleton.powerManagement.data["PowerDevil"]
-                && KickoffSingleton.powerManagement.data["PowerDevil"]["Is Lid Present"]) {
-                placesCategoryModel.setProperty(0, "decoration", "computer-laptop")
+        popEnter: Transition {
+            NumberAnimation {
+                property: "x"
+                from: 0.5 * root.width
+                to: 0
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                property: "opacity"
+                from: 0.0
+                to: 1.0
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        pushEnter: Transition {
+            NumberAnimation {
+                property: "x"
+                from: 0.5 * -root.width
+                to: 0
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                property: "opacity"
+                from: 0.0
+                to: 1.0
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        readonly property string preferredFavoritesViewObjectName: Plasmoid.configuration.favoritesDisplay === 0 ? "favoritesGridView" : "favoritesListView"
+        readonly property Component preferredFavoritesViewComponent: Plasmoid.configuration.favoritesDisplay === 0 ? favoritesGridViewComponent : favoritesListViewComponent
+        readonly property string preferredAllAppsViewObjectName: Plasmoid.configuration.applicationsDisplay === 0 ? "listOfGridsView" : "applicationsListView"
+//       readonly property Component preferredAllAppsViewComponent: Plasmoid.configuration.applicationsDisplay === 0 ? listOfGridsViewComponent : applicationsListViewComponent
+
+        readonly property string preferredAppsViewObjectName: Plasmoid.configuration.applicationsDisplay === 0 ? "applicationsGridView" : "applicationsListView"
+//        readonly property Component preferredAppsViewComponent: Plasmoid.configuration.applicationsDisplay === 0 ? applicationsGridViewComponent : applicationsListViewComponent
+        // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
+        // But to trigger model data update, set initial value to 0
+        property int appsModelRow: 0
+        readonly property Kicker.AppsModel appsModel: kickoff.rootModel.modelForRow(appsModelRow)
+        Connections {
+            target: kickoff.rootModel
+            function onRefreshed() { // recalculate appsModel binding on rootModel refresh;
+                stackView.appsModelRowChanged() // modelForRow does not create dependency
+            }
+        }
+        focus: true
+        initialItem: preferredFavoritesViewComponent
+
+        function showSectionView(sectionName: string, parentView: KickoffListView): void {
+            stackView.push(applicationsSectionViewComponent, {
+                currentSection: sectionName,
+                parentView,
+            });
+        }
+
+        Component {
+            id: favoritesListViewComponent
+            DropAreaListView {
+                id: favoritesListView
+                objectName: "favoritesListView"
+                mainContentView: true
+                focus: true
+                model: kickoff.rootModel.favoritesModel
+            }
+        }
+
+        Component {
+            id: favoritesGridViewComponent
+            DropAreaGridView {
+                id: favoritesGridView
+                objectName: "favoritesGridView"
+                focus: true
+                model: kickoff.rootModel.favoritesModel
+            }
+        }
+
+        Component {
+            id: applicationsListViewComponent
+
+            KickoffListView {
+                id: applicationsListView
+                objectName: "applicationsListView"
+                mainContentView: true
+                model: stackView.appsModel
+                // we want to semantically switch between group and "", disabling grouping, workaround for QTBUG-121797
+                section.property: model && model.description === "KICKER_ALL_MODEL" ? "group" : "_unset"
+                section.criteria: ViewSection.FirstCharacter
+                hasSectionView: stackView.appsModelRow === 1
+
+                onShowSectionViewRequested: sectionName => {
+                    stackView.showSectionView(sectionName, this);
+                }
+            }
+        }
+
+        Connections {
+            target: root.sideBarItem
+            function onCurrentIndexChanged() {
+                // Only update row index if the condition is met.
+                // The 0 index modelForRow isn't supposed to be used. That's just how it works.
+                if (root.sideBarItem.currentIndex > 0) {
+                    stackView.appsModelRow = root.sideBarItem.currentIndex
+                }
+                if (root.sideBarItem.currentIndex === 0
+                    && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
+                    stackView.replace(stackView.preferredFavoritesViewComponent)
+                    }
+            }
+        }
+        Connections {
+            target: kickoff
+            function onExpandedChanged() {
+                if (!kickoff.expanded && kickoff.contentArea.currentItem) {
+                    kickoff.contentArea.currentItem.forceActiveFocus()
+                }
             }
         }
     }

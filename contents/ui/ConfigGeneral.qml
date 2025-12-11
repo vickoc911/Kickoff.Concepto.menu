@@ -38,6 +38,7 @@ KCM.SimpleKCM {
     property int cfg_primaryActions: Plasmoid.configuration.primaryActions
     property alias cfg_showActionButtonCaptions: showActionButtonCaptions.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
+    property alias cfg_placesFirst: placesFirstCheckbox.checked
     property alias cfg_highlightNewlyInstalledApps: highlightNewlyInstalledAppsCheckbox.checked
     property alias cfg_switchCategoryOnHover: switchCategoryOnHoverCheckbox.checked
 
@@ -185,6 +186,12 @@ KCM.SimpleKCM {
             id: compactModeCheckbox
             text: i18n("Use compact list item style")
             checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.compactMode
+            enabled: !Kirigami.Settings.tabletMode
+        }
+        QQC2.CheckBox {
+            id: placesFirstCheckbox
+            text: i18n("Use Places First")
+            checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.placesFirst
             enabled: !Kirigami.Settings.tabletMode
         }
         QQC2.Label {
