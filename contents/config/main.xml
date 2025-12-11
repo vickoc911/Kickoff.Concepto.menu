@@ -5,6 +5,10 @@
     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
     <kcfgfile name=""/>
     <group name="General">
+        <entry name="placesFirst" type="Bool">
+            <label>Put Places First.</label>
+            <default>true</default>
+        </entry>
         <entry name="icon" type="String">
             <label>The name of the icon used in the compact representation (e.g. on a small panel).</label>
             <default>start-here-kde-symbolic</default>
@@ -35,7 +39,7 @@
         </entry>
         <entry name="systemApplications" type="StringList">
             <label>List of applications at the top of the "Computer" tab.</label>
-            <default>systemsettings.desktop,org.kde.kinfocenter.desktop,org.kde.discover.desktop</default>
+            <default></default>
         </entry>
         <entry name="paneSwap" type="Bool">
             <label>Whether to swap the sidebar and content panes</label>
