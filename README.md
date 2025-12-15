@@ -1,7 +1,17 @@
 # Kickoff.Concepto.menu
 A fork of the KDE Plasma kickoff menu. With a modern redesign.
 
-Screenshots
+# How to install it:
+
+- Download it from GitHub.
+
+- Unzip it and rename the folder to Kickoff.Concepto.menu.
+
+- Copy the folder to .local/share/plasma/plasmoids/ in your home directory.
+
+- That's it.
+
+# Screenshots
 
 ![plasma aqua white](screenshots/plasma_aqua_1.png?raw=true "plasma aqua white")
 
