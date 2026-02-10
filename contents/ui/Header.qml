@@ -223,7 +223,7 @@ PlasmaExtras.PlasmoidHeading {
                         searchField.forceActiveFocus(Qt.ShortcutFocusReason)
                     }
                     Keys.priority: Keys.AfterItem
-                    Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
+                 //   Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
                     Keys.onTabPressed: event => {
                         tabSetFocus(event, nextItemInFocusChain(false));
                     }
