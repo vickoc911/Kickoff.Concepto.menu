@@ -96,7 +96,7 @@ PlasmaExtras.PlasmoidHeading {
                     Layout.minimumWidth: height -5
                     Layout.maximumWidth: height -5
 
-                    text: i18n("Wellcome ") + kuser.loginName
+                    text: i18n("Welcome ") + kuser.loginName
                     name: kuser.fullName
 
                     // The icon property emits two signals in a row during which it
