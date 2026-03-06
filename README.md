@@ -1,6 +1,10 @@
 ### Kickoff.Concepto.menu
 A fork of the KDE Plasma kickoff menu. With a modern redesign.
 
+## Support for previous Plasma releases
+
+Currently supported versions: 6.4.2 or higher
+
 ### How to install it:
 
 - Download it from GitHub.
